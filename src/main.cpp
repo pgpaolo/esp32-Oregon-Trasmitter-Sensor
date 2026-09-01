@@ -216,13 +216,19 @@ void setupWeb() {
         cfg.thId = hexByte(web.arg("th_id"), cfg.thId);
         cfg.tempOffset = web.arg("t_off").toFloat();
         cfg.humOffset = web.arg("h_off").toFloat();
-        cfg.thIntervalMs = max(5000UL, (uint32_t)web.arg("th_ms").toInt());
+        {
+            const long requested = web.arg("th_ms").toInt();
+            cfg.thIntervalMs = (requested < 5000L) ? 5000UL : static_cast<uint32_t>(requested);
+        }
         cfg.uvEnabled = web.hasArg("uv_en");
         cfg.uvChannel = constrain((long)web.arg("uv_ch").toInt(), 1L, 3L);
         cfg.uvId = hexByte(web.arg("uv_id"), cfg.uvId);
         cfg.uvMultiplier = web.arg("uv_mul").toFloat();
         cfg.uvOffset = web.arg("uv_off").toFloat();
-        cfg.uvIntervalMs = max(5000UL, (uint32_t)web.arg("uv_ms").toInt());
+        {
+            const long requested = web.arg("uv_ms").toInt();
+            cfg.uvIntervalMs = (requested < 5000L) ? 5000UL : static_cast<uint32_t>(requested);
+        }
         saveConfig();
         radio.setHalfBitUs(cfg.halfUs);
         radio.setInvert(cfg.rfInvert);

@@ -1,0 +1,23 @@
+name: Beta build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  platformio:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [esp32dev, esp32c3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Install PlatformIO
+        run: pip install platformio
+      - name: Build ${{ matrix.environment }}
+        run: pio run -e ${{ matrix.environment }}
